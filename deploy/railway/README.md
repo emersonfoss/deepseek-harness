@@ -1,7 +1,23 @@
 # Railway deploy: dsh web (experiment)
 
-Self-hosts the DeepSeek Harness web UI on Railway behind an nginx basic-auth
-reverse proxy.
+Self-hosts the dsh web UI on Railway behind an nginx basic-auth reverse
+proxy.
+
+## Branding
+
+The image builds dsh from source (`pnpm install && pnpm run build`) instead
+of installing the published `@deepseek-ai/dsh` npm package. Upstream's own
+build has two profiles: `build:official` (DeepSeek's branded release) and the
+default `build` (no `--profile official`), which leaves
+`DSH_CLIENT_BUILD_PROFILE` unset. `@deepseek-ai/dsh-client-ui-brand-official`
+only registers the whale mark and "DeepSeek Harness" wordmark when that
+profile is exactly `official` (`packages/client/ui-brand-official/README.md`),
+so the default build ships the shell's neutral fallback mark and a
+"local build" title instead — this is upstream's documented, supported path
+for a self-hosted identity, not a patch. `apps/web/public/favicon.svg` was
+also swapped for a neutral mark. `start.sh` runs the built source
+(`pnpm dsh web` from `/dsh-src`) rather than a globally installed `dsh`
+binary.
 
 ## Why the proxy
 

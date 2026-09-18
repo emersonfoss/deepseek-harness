@@ -58,5 +58,5 @@ if [ -n "$TRUSTED_HOST" ]; then
   DSH_ARGS="$DSH_ARGS --trusted-host $TRUSTED_HOST"
 fi
 
-dsh web $DSH_ARGS &
+(cd /dsh-src && exec pnpm dsh web $DSH_ARGS) &
 exec nginx -g "daemon off;"
