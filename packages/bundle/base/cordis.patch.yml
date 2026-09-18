@@ -424,25 +424,32 @@
 
     # The shared base enables the stable model-facing web_search and web_fetch
     # tools. The Web app disables this host row and composes both tools per agent
-    # preset; products with a stricter network policy override tool-web. DeepSeek
-    # search resolves the same DEEPSEEK_API_KEY
-    # credential the Models page manages for chat, at each search; its Messages
-    # endpoint is separate from the chat-completions endpoint, so it takes its own
-    # base-URL override. Anonymous fetch accepts only public HTTP(S) destinations,
-    # resolves and validates every destination, and pins every actual connection.
-    # Search is a full auxiliary model request with server-side retrieval, so this
-    # shipped DeepSeek route gets 60s while the provider-neutral tool default
-    # remains 30s.
+    # preset; products with a stricter network policy override tool-web. Anonymous
+    # fetch accepts only public HTTP(S) destinations, resolves and validates every
+    # destination, and pins every actual connection.
+    #
+    # No searchProvider id is pinned here: each search row disables itself when
+    # its own credential env var is absent, so the seam auto-selects whichever
+    # single provider is actually usable ("no id configured, exactly one
+    # registered usable provider" per docs/subsystems/web.md) instead of failing
+    # WEB_PROVIDER_CONFIGURED_UNAVAILABLE against a provider this self-hosted
+    # deployment deliberately runs without a key for.
     - id: web
       name: '@deepseek-ai/dsh-web'
       config:
-        searchProvider: deepseek-official
         fetchProvider: http
 
     - id: web-search-deepseek
       name: '@deepseek-ai/dsh-web-search-deepseek'
+      disabled: !!js !process.env.DEEPSEEK_API_KEY
       config:
         apiKeyEnv: DEEPSEEK_API_KEY
+
+    - id: web-search-exa
+      name: '@deepseek-ai/dsh-web-search-exa'
+      disabled: !!js !process.env.EXA_API_KEY
+      config:
+        apiKey: !!js process.env.EXA_API_KEY
 
     - id: web-fetch-http
       name: '@deepseek-ai/dsh-web-fetch-http'

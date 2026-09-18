@@ -44,6 +44,13 @@ stays on `127.0.0.1:3080`.
   satisfies dsh's credential check.
 - `LOCAL_LLM_MODEL_ID` / `LOCAL_LLM_MODEL_NAME` — optional, override the
   advertised model id/display name for the `local-llm` provider.
+- `EXA_API_KEY` — optional. When set, enables real `web_search` via Exa
+  (`packages/bundle/base/cordis.patch.yml`'s `web-search-exa` row disables
+  itself when this is absent). `web_fetch` (URL retrieval, no key needed)
+  works regardless. `DEEPSEEK_API_KEY` enables the same search tool through
+  DeepSeek's own search endpoint instead, if you'd rather use that; setting
+  neither leaves `web_search` unavailable without a confusing
+  "configured but missing credential" error.
 
 ## Skills
 
