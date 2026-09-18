@@ -441,13 +441,13 @@
 
     - id: web-search-deepseek
       name: '@deepseek-ai/dsh-web-search-deepseek'
-      disabled: !!js !process.env.DEEPSEEK_API_KEY
+      disabled: !!js (!process.env.DEEPSEEK_API_KEY)
       config:
         apiKeyEnv: DEEPSEEK_API_KEY
 
     - id: web-search-exa
       name: '@deepseek-ai/dsh-web-search-exa'
-      disabled: !!js !process.env.EXA_API_KEY
+      disabled: !!js (!process.env.EXA_API_KEY)
       config:
         apiKey: !!js process.env.EXA_API_KEY
 
