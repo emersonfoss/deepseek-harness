@@ -18,6 +18,16 @@ stays on `127.0.0.1:3080`.
   printed in the deploy logs when `WEB_PASS` is unset)
 - `TRUSTED_HOST` — set to `${RAILWAY_PUBLIC_DOMAIN}` so dsh's `/api`
   browser-trust fence accepts requests arriving via the Railway domain
+- `LOCAL_LLM_BASE_URL` — optional. When set, `start.sh` registers a custom
+  `local-llm` pi-ai provider pointed at this OpenAI-compatible base URL (e.g.
+  a tunnel such as `cloudflared tunnel --url http://127.0.0.1:PORT` fronting a
+  self-hosted model like `mlx_lm.server`). Include the `/v1` suffix if the
+  endpoint expects it.
+- `LOCAL_LLM_API_KEY` — credential value read by the `local-llm` provider.
+  The tunneled server need not actually enforce it; any non-empty value
+  satisfies dsh's credential check.
+- `LOCAL_LLM_MODEL_ID` / `LOCAL_LLM_MODEL_NAME` — optional, override the
+  advertised model id/display name for the `local-llm` provider.
 
 ## Warnings
 
