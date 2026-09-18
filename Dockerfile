@@ -19,6 +19,7 @@ RUN npm install -g @deepseek-ai/dsh@0.1.5-rc.2
 WORKDIR /app
 COPY deploy/railway/nginx.conf.template /app/nginx.conf.template
 COPY deploy/railway/start.sh /app/start.sh
+COPY deploy/railway/skills /app/skills
 RUN chmod +x /app/start.sh
 
 EXPOSE 8080

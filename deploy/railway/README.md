@@ -29,6 +29,19 @@ stays on `127.0.0.1:3080`.
 - `LOCAL_LLM_MODEL_ID` / `LOCAL_LLM_MODEL_NAME` — optional, override the
   advertised model id/display name for the `local-llm` provider.
 
+## Skills
+
+`deploy/railway/skills/` is a vendored bundle of `<name>/SKILL.md` folders,
+baked into the image at `/app/skills` (Dockerfile `COPY`) and registered on
+every boot via `skill-filesystem.customSkillDirs` in `settings.yaml`, so
+skills survive the container's ephemeral storage without a runtime git
+clone. Sources: `emersonfoss/lq-skills` (legal skills), `emersonfoss/book-to-skill`,
+`anthropics/skills` (official document/dev skills; its own `skill-creator`
+was dropped in favor of lq-skills' version to avoid a name collision), and
+`JayRHa/AgentSkills` (community engineering/devops/productivity skills). To
+add or update skills, drop more `<name>/SKILL.md` folders into
+`deploy/railway/skills/` and redeploy.
+
 ## Warnings
 
 - Developer-preview software with no security audit that executes

@@ -14,16 +14,26 @@ echo "=================================================="
 
 envsubst '${PORT}' < /app/nginx.conf.template > /etc/nginx/nginx.conf
 
-# Wire a self-hosted (tunneled) model as a custom pi-ai provider when
-# LOCAL_LLM_BASE_URL is set. Regenerated on every boot since container
-# storage is ephemeral (see README.md). This path is only for a self-hosted
-# endpoint with no vendor key -- never bake a real API key here.
+# Regenerated on every boot since container storage is ephemeral (see
+# README.md). Two independent sections land in the same settings.yaml:
+# skill-filesystem (always, points at the skill bundle baked into the image
+# at /app/skills) and llm-pi-ai (only when LOCAL_LLM_BASE_URL is set). This
+# path is only for a self-hosted endpoint with no vendor key -- never bake a
+# real API key here.
 DSH_HOME="${DSH_HOME:-$HOME/.dsh}"
 mkdir -p "$DSH_HOME"
+
+cat > "$DSH_HOME/settings.yaml" <<'YAML'
+skill-filesystem:
+  customSkillDirs:
+    - /app/skills
+YAML
+echo "Registered baked-in skill bundle -> /app/skills"
+
 if [ -n "$LOCAL_LLM_BASE_URL" ]; then
   LOCAL_LLM_MODEL_ID="${LOCAL_LLM_MODEL_ID:-local-model}"
   LOCAL_LLM_MODEL_NAME="${LOCAL_LLM_MODEL_NAME:-Local model}"
-  cat > "$DSH_HOME/settings.yaml" <<YAML
+  cat >> "$DSH_HOME/settings.yaml" <<YAML
 llm-pi-ai:
   providers:
     local-llm:
